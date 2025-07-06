@@ -1,0 +1,48 @@
+# 日志文件
+logs/
+*.log
+
+# 上传文件
+uploads/
+temp/
+
+# Java 编译文件
+target/
+*.class
+*.jar
+*.war
+
+# IDE 文件
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# 数据库文件
+*.db
+*.sqlite
+
+# 配置文件（包含敏感信息）
+application-local.yml
+application-dev.yml
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# 其他
+*.bak
+*.backup 

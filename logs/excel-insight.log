@@ -1780,3 +1780,71 @@ Caused by: com.alibaba.excel.exception.ExcelAnalysisException: File /app/./uploa
 2025-07-06 05:23:07 [http-nio-8080-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
 2025-07-06 05:23:07 [http-nio-8080-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=4, fileName=6353ebb4-7645-45f0-a912-4a482f60cabb.x (truncated)...]
 2025-07-06 05:23:07 [http-nio-8080-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:46:46 [http-nio-8080-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/files", parameters={}
+2025-07-06 07:46:46 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.PageController#files()
+2025-07-06 07:46:46 [http-nio-8080-exec-3] DEBUG o.s.w.servlet.view.ContentNegotiatingViewResolver - Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.7, */*;q=0.8]
+2025-07-06 07:46:46 [http-nio-8080-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:46:46 [http-nio-8080-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/list", parameters={}
+2025-07-06 07:46:46 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileList()
+2025-07-06 07:46:47 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:46:47 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=4, fileName=6353ebb4-7645-45f0-a912-4a482f60cabb.x (truncated)...]
+2025-07-06 07:46:47 [http-nio-8080-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:46:50 [http-nio-8080-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - POST "/excel-insight/api/excel/upload", parameters={multipart}
+2025-07-06 07:46:50 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#uploadFile(MultipartFile)
+2025-07-06 07:46:50 [http-nio-8080-exec-5] INFO  com.excelinsight.service.impl.ExcelFileServiceImpl - 文件上传成功: DataExport4.19.xlsx
+2025-07-06 07:46:50 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:46:50 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=文件上传成功, data=ExcelFile(id=5, fileName=8f813ca9-5ea3-4a11-83e3-658736c8979e. (truncated)...]
+2025-07-06 07:46:50 [http-nio-8080-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:46:52 [http-nio-8080-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/list", parameters={}
+2025-07-06 07:46:52 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileList()
+2025-07-06 07:46:52 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:46:52 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=5, fileName=8f813ca9-5ea3-4a11-83e3-658736c8979e.x (truncated)...]
+2025-07-06 07:46:52 [http-nio-8080-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:46:54 [http-nio-8080-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/5/headers", parameters={}
+2025-07-06 07:46:54 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileHeaders(Long)
+2025-07-06 07:46:54 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:46:54 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[], timestamp=1751788014274)]
+2025-07-06 07:46:54 [http-nio-8080-exec-7] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:47:03 [http-nio-8080-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/list", parameters={}
+2025-07-06 07:47:03 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileList()
+2025-07-06 07:47:03 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:47:03 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=5, fileName=8f813ca9-5ea3-4a11-83e3-658736c8979e.x (truncated)...]
+2025-07-06 07:47:03 [http-nio-8080-exec-8] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:47:03 [http-nio-8080-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/list", parameters={}
+2025-07-06 07:47:03 [http-nio-8080-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileList()
+2025-07-06 07:47:03 [http-nio-8080-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:47:03 [http-nio-8080-exec-9] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=5, fileName=8f813ca9-5ea3-4a11-83e3-658736c8979e.x (truncated)...]
+2025-07-06 07:47:03 [http-nio-8080-exec-9] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:47:04 [http-nio-8080-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/list", parameters={}
+2025-07-06 07:47:04 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileList()
+2025-07-06 07:47:04 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:47:04 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=5, fileName=8f813ca9-5ea3-4a11-83e3-658736c8979e.x (truncated)...]
+2025-07-06 07:47:04 [http-nio-8080-exec-10] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:47:04 [http-nio-8080-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/list", parameters={}
+2025-07-06 07:47:04 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileList()
+2025-07-06 07:47:04 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:47:04 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=5, fileName=8f813ca9-5ea3-4a11-83e3-658736c8979e.x (truncated)...]
+2025-07-06 07:47:04 [http-nio-8080-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:47:04 [http-nio-8080-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/list", parameters={}
+2025-07-06 07:47:04 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileList()
+2025-07-06 07:47:04 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:47:04 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=5, fileName=8f813ca9-5ea3-4a11-83e3-658736c8979e.x (truncated)...]
+2025-07-06 07:47:04 [http-nio-8080-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:47:07 [http-nio-8080-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/analysis", parameters={}
+2025-07-06 07:47:07 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.PageController#analysis()
+2025-07-06 07:47:07 [http-nio-8080-exec-3] DEBUG o.s.w.servlet.view.ContentNegotiatingViewResolver - Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.7, */*;q=0.8]
+2025-07-06 07:47:07 [http-nio-8080-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:47:07 [http-nio-8080-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/list", parameters={}
+2025-07-06 07:47:07 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileList()
+2025-07-06 07:47:08 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:47:08 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=5, fileName=8f813ca9-5ea3-4a11-83e3-658736c8979e.x (truncated)...]
+2025-07-06 07:47:08 [http-nio-8080-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:47:10 [http-nio-8080-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/files", parameters={}
+2025-07-06 07:47:10 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.PageController#files()
+2025-07-06 07:47:10 [http-nio-8080-exec-5] DEBUG o.s.w.servlet.view.ContentNegotiatingViewResolver - Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.7, */*;q=0.8]
+2025-07-06 07:47:10 [http-nio-8080-exec-5] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-07-06 07:47:10 [http-nio-8080-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/excel-insight/api/excel/list", parameters={}
+2025-07-06 07:47:10 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.excelinsight.controller.ExcelController#getFileList()
+2025-07-06 07:47:10 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2025-07-06 07:47:10 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Result(code=200, message=操作成功, data=[ExcelFile(id=5, fileName=8f813ca9-5ea3-4a11-83e3-658736c8979e.x (truncated)...]
+2025-07-06 07:47:10 [http-nio-8080-exec-6] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
