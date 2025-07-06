@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0
+    container_name: excel-insight-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: excel_insight
+      MYSQL_USER: excel_user
+      MYSQL_PASSWORD: excel_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./src/main/resources/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - excel-insight-network
+
+  # Excel Insight Pro应用
+  excel-insight:
+    build: .
+    container_name: excel-insight-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/excel_insight?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
+      FILE_UPLOAD_PATH: /app/uploads/
+      FILE_TEMP_PATH: /app/temp/
+    volumes:
+      - ./uploads:/app/uploads
+      - ./temp:/app/temp
+      - ./logs:/app/logs
+    depends_on:
+      - mysql
+    networks:
+      - excel-insight-network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  excel-insight-network:
+    driver: bridge 
