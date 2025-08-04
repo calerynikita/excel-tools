@@ -193,8 +193,9 @@
                             </div>
                             <div class="col-md-3">
                                 <small class="text-muted">
-                                    维度字段：${task.dimensionFields ? JSON.parse(task.dimensionFields).join(', ') : '无'}<br>
-                                    数值字段：${task.valueFields ? JSON.parse(task.valueFields).join(', ') : '无'}
+                                    维度字段：${getFieldDisplay(task.dimensionFields)}<br>
+                                    数值字段：${getFieldDisplay(task.valueFields)}<br>
+                                    筛选条件：${getFilterDisplay(task.filterConditions)}
                                 </small>
                             </div>
                             <div class="col-md-3 text-end">
@@ -276,15 +277,15 @@
                         <table class="table table-sm">
                             <tr>
                                 <td><strong>维度字段：</strong></td>
-                                <td>${task.dimensionFields ? JSON.parse(task.dimensionFields).join(', ') : '无'}</td>
+                                <td>${getFieldDisplay(task.dimensionFields)}</td>
                             </tr>
                             <tr>
                                 <td><strong>数值字段：</strong></td>
-                                <td>${task.valueFields ? JSON.parse(task.valueFields).join(', ') : '无'}</td>
+                                <td>${getFieldDisplay(task.valueFields)}</td>
                             </tr>
                             <tr>
                                 <td><strong>筛选条件：</strong></td>
-                                <td>${task.filterConditions ? JSON.parse(task.filterConditions).length + ' 个条件' : '无'}</td>
+                                <td>${getFilterDisplay(task.filterConditions)}</td>
                             </tr>
                         </table>
                     </div>
@@ -312,19 +313,7 @@
 
         // 查看分析结果
         function viewResult(taskId) {
-            fetch(`/excel-insight/api/analysis/task/${taskId}/result`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.code === 200) {
-                        // 跳转到数据分析页面并显示结果
-                        window.location.href = `/excel-insight/analysis?taskId=${taskId}`;
-                    } else {
-                        alert('获取分析结果失败：' + data.message);
-                    }
-                })
-                .catch(error => {
-                    alert('获取分析结果失败：' + error.message);
-                });
+            window.location.href = `/excel-insight/analysis-result?taskId=${taskId}`;
         }
 
         // 删除任务
@@ -396,6 +385,31 @@
                 'scatter': '散点图'
             };
             return chartTypeMap[chartType] || chartType;
+        }
+
+        // 安全地获取字段显示文本
+        function getFieldDisplay(fieldJson) {
+            try {
+                if (!fieldJson) return '无';
+                const fields = JSON.parse(fieldJson);
+                return Array.isArray(fields) && fields.length > 0 ? fields.join(', ') : '无';
+            } catch (e) {
+                console.error('解析字段JSON失败:', e);
+                return '解析失败';
+            }
+        }
+
+        // 安全地获取筛选条件显示文本
+        function getFilterDisplay(filterJson) {
+            try {
+                if (!filterJson) return '无';
+                const filters = JSON.parse(filterJson);
+                if (!Array.isArray(filters) || filters.length === 0) return '无';
+                return `${filters.length} 个条件`;
+            } catch (e) {
+                console.error('解析筛选条件JSON失败:', e);
+                return '解析失败';
+            }
         }
     </script>
 </body>

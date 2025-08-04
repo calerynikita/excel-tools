@@ -2,8 +2,11 @@ package com.excelinsight.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
 import com.excelinsight.dto.AnalysisResult;
 import com.excelinsight.dto.ChartConfig;
 import com.excelinsight.entity.AnalysisTask;
@@ -82,7 +85,9 @@ public class AnalysisServiceImpl implements AnalysisService {
         } catch (Exception e) {
             log.error("分析任务执行失败: {}", taskId, e);
             analysisTaskMapper.updateErrorMessage(taskId, e.getMessage(), 3);
-            throw new RuntimeException("分析任务执行失败: " + e.getMessage());
+           // throw new RuntimeException("分析任务执行失败: " + e.getMessage());
+            throw new RuntimeException("分析任务执行失败: " + e, e);
+
         }
     }
 
@@ -92,7 +97,31 @@ public class AnalysisServiceImpl implements AnalysisService {
         if (task == null || task.getAnalysisResult() == null) {
             return null;
         }
-        return JSON.parseObject(task.getAnalysisResult(), AnalysisResult.class);
+        // 先整体反序列化
+        AnalysisResult result = JSON.parseObject(task.getAnalysisResult(), AnalysisResult.class);
+
+     
+        // 直接从 task 对象取这三个字段
+        if (task.getDimensionFields() != null && !task.getDimensionFields().isEmpty()) {
+            result.setDimensionFields(JSON.parseArray(task.getDimensionFields(), String.class));
+        } else {
+            result.setDimensionFields(new ArrayList<>());
+        }
+
+        // 解析 valueFields
+        if (task.getValueFields() != null && !task.getValueFields().isEmpty()) {
+            result.setValueFields(JSON.parseArray(task.getValueFields(), String.class));
+        } else {
+            result.setValueFields(new ArrayList<>());
+        }
+
+        // 解析 filterConditions
+        if (task.getFilterConditions() != null && !task.getFilterConditions().isEmpty()) {
+            result.setFilterConditions(JSON.parseArray(task.getFilterConditions(), ChartConfig.FilterCondition.class));
+        } else {
+            result.setFilterConditions(new ArrayList<>());
+        }
+        return result;
     }
 
     @Override
@@ -116,24 +145,26 @@ public class AnalysisServiceImpl implements AnalysisService {
     private List<Map<String, Object>> parseExcelData(String filePath) {
         List<Map<String, Object>> data = new ArrayList<>();
         List<String> headers = new ArrayList<>();
-        
-        EasyExcel.read(filePath, new ReadListener<Map<Integer, String>>() {
+
+        EasyExcel.read(filePath, new AnalysisEventListener<Map<Integer, String>>() {
+            @Override
+            public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
+                headers.clear();
+                for (int i = 0; i < headMap.size(); i++) {
+                    headers.add(headMap.get(i));
+                }
+                System.out.println("解析到的表头: " + headers);
+            }
+
             @Override
             public void invoke(Map<Integer, String> rowData, AnalysisContext context) {
-                if (context.readRowHolder().getRowIndex() == 0) {
-                    // 第一行作为表头
-                    for (int i = 0; i < rowData.size(); i++) {
-                        headers.add(rowData.get(i));
-                    }
-                } else {
-                    // 数据行
-                    Map<String, Object> row = new HashMap<>();
-                    for (int i = 0; i < headers.size(); i++) {
-                        String value = rowData.get(i);
-                        row.put(headers.get(i), value);
-                    }
-                    data.add(row);
+                Map<String, Object> row = new HashMap<>();
+                for (int i = 0; i < headers.size(); i++) {
+                    String value = rowData.get(i);
+                    row.put(headers.get(i), value);
                 }
+                System.out.println("解析到的数据行: " + row);
+                data.add(row);
             }
 
             @Override
@@ -141,7 +172,7 @@ public class AnalysisServiceImpl implements AnalysisService {
                 // 解析完成
             }
         }).sheet().doRead();
-        
+
         return data;
     }
 
@@ -214,99 +245,103 @@ public class AnalysisServiceImpl implements AnalysisService {
      */
     private AnalysisResult generateAnalysisResult(List<Map<String, Object>> data, AnalysisTask task) {
         AnalysisResult result = new AnalysisResult();
-        
         // 解析配置
         ChartConfig config = JSON.parseObject(task.getChartConfig(), ChartConfig.class);
-        List<String> dimensionFields = JSON.parseArray(task.getDimensionFields(), String.class);
-        List<String> valueFields = JSON.parseArray(task.getValueFields(), String.class);
-        
+        List<String> dimensionFields = Optional.ofNullable(JSON.parseArray(task.getDimensionFields(), String.class)).orElse(new ArrayList<>());
+        List<String> valueFields = Optional.ofNullable(JSON.parseArray(task.getValueFields(), String.class)).orElse(new ArrayList<>());
+        List<ChartConfig.FilterCondition> filters = JSON.parseArray(task.getFilterConditions(), ChartConfig.FilterCondition.class);
+
+        List<Map<String, Object>> safeData = Optional.ofNullable(data).orElse(new ArrayList<>());
+
+        // 日志打印字段名
+        System.out.println("dimensionFields: " + dimensionFields);
+        System.out.println("valueFields: " + valueFields);
+        // 日志打印每一行数据
+        for (Map<String, Object> row : safeData) {
+            System.out.println("row: " + row);
+        }
+    
+        // 设置到 result
+        result.setDimensionFields(dimensionFields);
+        result.setValueFields(valueFields);
+        result.setFilterConditions(filters);
+
         result.setChartType(config.getChartType());
         result.setTitle(config.getTitle());
-        
+
         // 生成图表数据
         AnalysisResult.ChartData chartData = new AnalysisResult.ChartData();
-        
+
         if ("pie".equals(config.getChartType())) {
             // 饼图数据处理
             Map<String, Double> groupedData = new HashMap<>();
-            for (Map<String, Object> row : data) {
+            for (Map<String, Object> row : safeData) {
+                if (row == null) continue;
                 String key = dimensionFields.stream()
                     .map(field -> row.get(field))
-                    .map(Object::toString)
+                    .map(obj -> obj == null ? "" : obj.toString())
                     .collect(Collectors.joining("-"));
-                
                 Double value = valueFields.stream()
                     .mapToDouble(field -> parseDouble(row.get(field)))
                     .sum();
-                
+                System.out.println("分组key: " + key + ", value: " + value);
                 groupedData.merge(key, value, Double::sum);
             }
-            
             chartData.setCategories(new ArrayList<>(groupedData.keySet()));
             AnalysisResult.Series series = new AnalysisResult.Series();
             series.setName("数据");
             series.setType("pie");
             series.setData(new ArrayList<>(groupedData.values()));
             chartData.setSeries(Collections.singletonList(series));
-            
         } else {
             // 柱状图、折线图等处理
             Map<String, Map<String, Double>> groupedData = new HashMap<>();
-            
-            for (Map<String, Object> row : data) {
+            for (Map<String, Object> row : safeData) {
+                if (row == null) continue;
                 String dimensionKey = dimensionFields.stream()
                     .map(field -> row.get(field))
-                    .map(Object::toString)
+                    .map(obj -> obj == null ? "" : obj.toString())
                     .collect(Collectors.joining("-"));
-                
                 if (!groupedData.containsKey(dimensionKey)) {
                     groupedData.put(dimensionKey, new HashMap<>());
                 }
-                
                 for (String valueField : valueFields) {
                     Double value = parseDouble(row.get(valueField));
+                    System.out.println("分组: " + dimensionKey + ", valueField: " + valueField + ", value: " + value);
                     groupedData.get(dimensionKey).merge(valueField, value, Double::sum);
                 }
             }
-            
             chartData.setCategories(new ArrayList<>(groupedData.keySet()));
             List<AnalysisResult.Series> seriesList = new ArrayList<>();
-            
             for (String valueField : valueFields) {
                 AnalysisResult.Series series = new AnalysisResult.Series();
                 series.setName(valueField);
                 series.setType(config.getChartType());
-                
                 List<Object> seriesData = groupedData.values().stream()
                     .map(group -> group.getOrDefault(valueField, 0.0))
                     .collect(Collectors.toList());
+                System.out.println("seriesData for " + valueField + ": " + seriesData);
                 series.setData(seriesData);
-                
                 seriesList.add(series);
             }
-            
             chartData.setSeries(seriesList);
         }
-        
         result.setData(chartData);
-        
         // 生成统计信息
         AnalysisResult.Statistics statistics = new AnalysisResult.Statistics();
-        statistics.setTotalCount((long) data.size());
-        
+        statistics.setTotalCount((long) safeData.size());
         if (!valueFields.isEmpty()) {
-            List<Double> allValues = data.stream()
+            List<Double> allValues = safeData.stream()
+                .filter(Objects::nonNull)
                 .flatMap(row -> valueFields.stream().map(field -> parseDouble(row.get(field))))
                 .collect(Collectors.toList());
-            
+            System.out.println("allValues: " + allValues);
             statistics.setTotalValue(allValues.stream().mapToDouble(Double::doubleValue).sum());
             statistics.setAverageValue(allValues.stream().mapToDouble(Double::doubleValue).average().orElse(0.0));
             statistics.setMaxValue(allValues.stream().mapToDouble(Double::doubleValue).max().orElse(0.0));
             statistics.setMinValue(allValues.stream().mapToDouble(Double::doubleValue).min().orElse(0.0));
         }
-        
         result.setStatistics(statistics);
-        
         return result;
     }
 

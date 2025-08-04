@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.alibaba.excel.event.AnalysisEventListener;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -139,7 +140,6 @@ public class ExcelFileServiceImpl implements ExcelFileService {
                     headers.add(headMap.get(i));
                 }
             }
-
             @Override
             public void doAfterAllAnalysed(AnalysisContext context) {}
         }).doRead();

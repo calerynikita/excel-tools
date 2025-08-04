@@ -34,7 +34,20 @@ public class AnalysisResult {
      * 统计信息
      */
     private Statistics statistics;
+
+    private List<String> dimensionFields;
+    private List<String> valueFields;
+    private List<ChartConfig.FilterCondition> filterConditions;
     
+    public List<String> getDimensionFields() { return dimensionFields; }
+    public void setDimensionFields(List<String> dimensionFields) { this.dimensionFields = dimensionFields; }
+    
+    public List<String> getValueFields() { return valueFields; }
+    public void setValueFields(List<String> valueFields) { this.valueFields = valueFields; }
+    
+    public List<ChartConfig.FilterCondition> getFilterConditions() { return filterConditions; }
+    public void setFilterConditions(List<ChartConfig.FilterCondition> filterConditions) { this.filterConditions = filterConditions; }
+
     /**
      * 图表数据内部类
      */

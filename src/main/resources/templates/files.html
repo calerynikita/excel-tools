@@ -36,6 +36,35 @@
         .progress {
             height: 6px;
         }
+        .custom-modal-content {
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+       }
+        .custom-modal-header {
+        border-bottom: 1px solid #f0f0f0;
+        }
+        .custom-modal-body {
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 18px 24px;
+        }
+        .field-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        }
+        .field-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid #f5f5f5;
+        font-size: 16px;
+        color: #333;
+        }
+        .field-list li:last-child {
+        border-bottom: none;
+        }
+        .custom-modal-footer {
+        border-top: 1px solid #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -141,7 +170,23 @@
             </div>
         </div>
     </main>
-
+<!-- 字段查看美化弹窗 -->
+    <div class="modal fade" id="fieldModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-header custom-modal-header">
+            <h5 class="modal-title"><i class="bi bi-list-ul"></i> 文件字段</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body custom-modal-body">
+            <ul class="field-list" id="fieldList"></ul>
+            </div>
+            <div class="modal-footer custom-modal-footer">
+            <button type="button" class="btn btn-success" data-bs-dismiss="modal">确定</button>
+            </div>
+        </div>
+        </div>
+    </div>
     <!-- 删除确认模态框 -->
     <div class="modal fade" id="deleteModal" tabindex="-1">
         <div class="modal-dialog">
@@ -310,8 +355,8 @@
                                 </span>
                             </div>
                             <div class="col-md-3 text-end">
-                                <button class="btn btn-outline-primary btn-sm me-2" onclick="viewHeaders(${file.id})">
-                                    <i class="bi bi-list"></i> 查看字段
+                                <button class="btn btn-primary btn-sm" onclick="viewFields(${file.id})">
+                                    查看字段
                                 </button>
                                 <button class="btn btn-outline-danger btn-sm" onclick="deleteFile(${file.id}, '${file.originalFileName}')">
                                     <i class="bi bi-trash"></i> 删除
@@ -325,21 +370,40 @@
             document.getElementById('fileList').innerHTML = fileListHtml;
         }
 
-        // 查看文件字段
-        function viewHeaders(fileId) {
+        function viewFields(fileId) {
             fetch(`/excel-insight/api/excel/${fileId}/headers`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 200) {
-                        const headers = data.data;
-                        alert('文件字段：\n' + headers.join('\n'));
+                       // 假设 data.fields 是字段数组
+                        showFieldModal(data.data || []);
                     } else {
                         alert('获取字段失败：' + data.message);
                     }
                 })
                 .catch(error => {
                     alert('获取字段失败：' + error.message);
+            });
+        }
+
+       // 打开字段弹窗并渲染字段
+        function showFieldModal(fields) {
+            const fieldList = document.getElementById('fieldList');
+            fieldList.innerHTML = '';
+            if (fields && fields.length > 0) {
+                fields.forEach(f => {
+                    const li = document.createElement('li');
+                    li.textContent = f;
+                    fieldList.appendChild(li);
                 });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = '无字段';
+                fieldList.appendChild(li);
+            }
+            // 显示弹窗
+            var modal = new bootstrap.Modal(document.getElementById('fieldModal'));
+            modal.show();
         }
 
         // 删除文件

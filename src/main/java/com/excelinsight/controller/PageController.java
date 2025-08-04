@@ -40,4 +40,11 @@ public class PageController {
     public String tasks() {
         return "tasks";
     }
+    
+    @GetMapping("/analysis-result")
+    public String analysisResult() {
+        // 返回模板名，不带.html后缀
+        return "analysis-result";
+    }
+
 } 
