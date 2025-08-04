@@ -124,25 +124,27 @@ public class ExcelFileServiceImpl implements ExcelFileService {
     @Override
     public List<String> parseHeaders(String filePath) throws Exception {
         List<String> headers = new ArrayList<>();
-        
-        EasyExcel.read(filePath, new ReadListener<Map<Integer, String>>() {
+    EasyExcel.read(filePath)
+        .sheet()
+        .headRowNumber(1)
+        .registerReadListener(new AnalysisEventListener<Map<Integer, String>>() {
             @Override
             public void invoke(Map<Integer, String> data, AnalysisContext context) {
-                // 只读取第一行作为表头
-                if (context.readRowHolder().getRowIndex() == 0) {
-                    for (int i = 0; i < data.size(); i++) {
-                        headers.add(data.get(i));
-                    }
+                // 不处理数据行
+            }
+            @Override
+            public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
+                // 只处理表头
+                for (int i = 0; i < headMap.size(); i++) {
+                    headers.add(headMap.get(i));
                 }
             }
 
             @Override
-            public void doAfterAllAnalysed(AnalysisContext context) {
-                // 解析完成
-            }
-        }).sheet().doRead();
-        
-        return headers;
+            public void doAfterAllAnalysed(AnalysisContext context) {}
+        }).doRead();
+
+       return headers;
     }
 
     /**
