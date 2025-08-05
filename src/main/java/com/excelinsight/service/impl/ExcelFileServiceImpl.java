@@ -6,6 +6,7 @@ import com.alibaba.excel.read.listener.ReadListener;
 import com.excelinsight.entity.ExcelFile;
 import com.excelinsight.mapper.ExcelFileMapper;
 import com.excelinsight.service.ExcelFileService;
+import com.excelinsight.util.UploadPathUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,39 +44,35 @@ public class ExcelFileServiceImpl implements ExcelFileService {
     public ExcelFile uploadFile(MultipartFile file) throws Exception {
         // 验证文件
         validateFile(file);
-        
+
         // 生成唯一文件名
         String originalFileName = file.getOriginalFilename();
         String fileExtension = getFileExtension(originalFileName);
         String fileName = UUID.randomUUID().toString() + "." + fileExtension;
-        
-        // 确保上传目录存在
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-        
+
+        // 获取统一的上传目录
+        String uploadDirPath = UploadPathUtil.getUploadDir(); // 自动创建目录
+        File destFile = new File(uploadDirPath, fileName);
+
         // 保存文件
-        String filePath = uploadPath + fileName;
-        File destFile = new File(filePath);
         file.transferTo(destFile);
-        
+
         // 保存文件信息到数据库
         ExcelFile excelFile = new ExcelFile();
         excelFile.setFileName(fileName);
         excelFile.setOriginalFileName(originalFileName);
-        excelFile.setFilePath(filePath);
+        excelFile.setFilePath(destFile.getAbsolutePath());
         excelFile.setFileSize(file.getSize());
         excelFile.setFileType(fileExtension);
         excelFile.setUploadTime(LocalDateTime.now());
         excelFile.setStatus(0); // 临时文件
-        
+
         excelFileMapper.insert(excelFile);
-        
+
         // 更新文件状态为已处理
         excelFileMapper.updateStatus(excelFile.getId(), 1);
         excelFile.setStatus(1);
-        
+
         log.info("文件上传成功: {}", originalFileName);
         return excelFile;
     }

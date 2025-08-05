@@ -2,6 +2,8 @@ package com.excelinsight.util;
 
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.read.listener.PageReadListener;
+import com.excelinsight.dto.ChartConfig;
+
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +35,7 @@ public class ExcelUtil {
         return data.stream().filter(row -> {
             for (ChartConfig.FilterCondition f : filters) {
                 String v = String.valueOf(row.get(f.getField()));
-                if (!ExcelUtil.matchCondition(v, f.getOperator(), f.getValue())) return false;
+                if (!ExcelUtil.matchCondition(v, f.getOperator(), (String) f.getValue())) return false;
             }
             return true;
         }).collect(Collectors.toList());
