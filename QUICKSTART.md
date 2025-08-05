@@ -11,7 +11,7 @@
 
 1. **下载项目**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/calerynikita/excel-tools.git
    cd excel-insight-pro
    ```
 

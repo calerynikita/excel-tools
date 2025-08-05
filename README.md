@@ -68,7 +68,7 @@ Excel Insight Pro 是一个基于Spring Boot + MyBatis + MySQL + EasyExcel的Exc
 
 ### 1. 克隆项目
 ```bash
-git clone <repository-url>
+git clone https://github.com/calerynikita/excel-tools.git
 cd excel-insight-pro
 ```
 
@@ -81,18 +81,7 @@ CREATE DATABASE excel_insight DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unic
 source src/main/resources/sql/init.sql
 ```
 
-### 3. 配置文件
-修改 `src/main/resources/application.yml` 中的数据库连接信息：
-
-```yaml
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/excel_insight?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-    username: your_username
-    password: your_password
-```
-
-### 4. 启动应用
+### 3. 启动应用
 ```bash
 # 编译项目
 mvn clean package
@@ -101,7 +90,7 @@ mvn clean package
 java -jar target/excel-insight-pro-1.0.0.jar
 ```
 
-### 5. 访问应用
+### 4. 访问应用
 - 应用地址：http://localhost:8080/excel-insight
 - Druid监控：http://localhost:8080/excel-insight/druid
 
@@ -150,29 +139,6 @@ excel-insight-pro/
 │   └── test/                        # 测试代码
 ├── pom.xml                          # Maven配置
 └── README.md                        # 项目文档
-```
-
-## 🔧 配置说明
-
-### 文件上传配置
-```yaml
-file:
-  upload:
-    path: ./uploads/              # 文件上传路径
-    temp-path: ./temp/            # 临时文件路径
-    allowed-extensions: xlsx,xls  # 允许的文件扩展名
-    max-size: 52428800           # 最大文件大小（50MB）
-```
-
-### 数据库配置
-```yaml
-spring:
-  datasource:
-    druid:
-      initial-size: 5             # 初始连接数
-      min-idle: 5                 # 最小空闲连接数
-      max-active: 20              # 最大活跃连接数
-      max-wait: 60000             # 最大等待时间
 ```
 
 ## 🚀 部署方案
@@ -268,21 +234,6 @@ docker run -d -p 8080:8080 ^
   excel-insight-pro
 ```
 
-## 📊 监控和日志
-
-### Druid监控
-- 访问地址：http://localhost:8080/excel-insight/druid
-- 默认账号：admin/admin
-- 功能：数据库连接池监控、SQL性能分析
-
-### 日志配置
-```yaml
-logging:
-  level:
-    com.excelinsight: debug
-  file:
-    name: ./logs/excel-insight.log
-```
 
 ## 🔒 安全特性
 
@@ -297,23 +248,11 @@ logging:
 - 操作日志记录
 - 异常处理机制
 
-## 🤝 贡献指南
 
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开 Pull Request
-
-## 📄 许可证
-
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
 
 ## 📞 联系方式
-
-- 项目地址：[GitHub Repository]
 - 问题反馈：[Issues]
-- 邮箱：[your-email@example.com]
+- 邮箱：calerynikita@163.com
 
 ## ❓ 常见问题
 
@@ -357,12 +296,3 @@ pip install pandas numpy openpyxl
 python create-test-data.py
 ```
 生成的Excel文件将保存在uploads目录中，可直接上传测试。
-
-## 🙏 致谢
-
-感谢以下开源项目的支持：
-- [Spring Boot](https://spring.io/projects/spring-boot)
-- [MyBatis](https://mybatis.org/)
-- [EasyExcel](https://github.com/alibaba/easyexcel)
-- [ECharts](https://echarts.apache.org/)
-- [Bootstrap](https://getbootstrap.com/) 
